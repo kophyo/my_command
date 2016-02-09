@@ -2,5 +2,5 @@
 
 require 'my_command'
 
-cat_api = MyCommand::CatApi.new(ARGV[0])
-cat_api.run
+cat_command = MyCommand::CatCommand.new(ARGV[0])
+cat_command.run

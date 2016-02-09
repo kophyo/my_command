@@ -1,10 +1,9 @@
 require "my_command/version"
+require "my_command/cat_api"
 require "launchy"
-require 'httparty'
 
 module MyCommand
-  class CatApi
-    include HTTParty
+  class CatCommand
     attr_reader :command
 
     def initialize(command = nil)
@@ -14,24 +13,38 @@ module MyCommand
     def run
       case command
       when 'browser'
-        response = HTTParty.get('http://thecatapi.com/api/images/get?format=xml&type=jpg,png')
-        image_url = response['response']['data']['images']['image']['url']
-        Launchy.open(image_url)
+        open_image_in_browser
       when 'file'
-        File.open(cat_image_file, "wb") do |f|
-          f.binmode
-          f.write HTTParty.get('http://thecatapi.com/api/images/get?type=jpg').parsed_response
-        end
+        save_image_file
       when 'fact'
-        response = JSON.parse(HTTParty.get('http://catfacts-api.appspot.com/api/facts').parsed_response)
-        puts response['facts'].first
+        print_out_cat_fact
       when 'save_facts'
-        response = JSON.parse(HTTParty.get('http://catfacts-api.appspot.com/api/facts?number=100').parsed_response)
-        File.open(cat_facts_file, "wb") do |f|
-          f.write response['facts'].each_with_index.map{|fact, i| "#{i+1}. #{fact}"}.join("\n")
-        end
+        save_facts_file
       else
         puts "Invalid argument. Please use either browser, file, fact or save_facts"
+      end
+    end
+
+    private
+
+    def open_image_in_browser
+      Launchy.open(CatApi.get_random_image_url)
+    end
+
+    def save_image_file
+      File.open(cat_image_file, "wb") do |f|
+        f.binmode
+        f.write CatApi.get_binary_image
+      end
+    end
+
+    def print_out_cat_fact
+      puts CatApi.get_facts.first
+    end
+
+    def save_facts_file
+      File.open(cat_facts_file, "wb") do |f|
+        f.write CatApi.get_facts(100).each_with_index.map{|fact, i| "#{i+1}. #{fact}"}.join("\n")
       end
     end
 
@@ -42,5 +55,6 @@ module MyCommand
     def cat_facts_file
       File.join(Dir.home, 'Desktop', 'cat_facts.txt')
     end
+
   end
 end
