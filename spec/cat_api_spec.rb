@@ -46,5 +46,23 @@ describe MyCommand::CatApi do
         expect(File.read(desktop_image_file)).to eq('Hello World')
       end
     end
+
+    context 'fact command' do
+      let(:command) { 'fact' }
+      let(:response) do
+        double(parsed_response: raw_response)
+      end
+
+      let(:raw_response) do
+        "{\"facts\": [\"Cats are cute.\"], \"success\": \"true\"}"
+      end
+
+      it 'print to stdout a cat fact' do
+        allow(HTTParty).to receive(:get).with('http://catfacts-api.appspot.com/api/facts').and_return(response)
+
+        expect(STDOUT).to receive(:puts).with('Cats are cute.')
+        subject.run
+      end
+    end
   end
 end

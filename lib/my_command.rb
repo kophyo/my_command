@@ -21,6 +21,9 @@ module MyCommand
           f.binmode
           f.write HTTParty.get('http://thecatapi.com/api/images/get?type=jpg').parsed_response
         end
+      elsif @command == 'fact'
+        response = JSON.parse(HTTParty.get('http://catfacts-api.appspot.com/api/facts').parsed_response)
+        puts response['facts'].first
       end
     end
 
