@@ -37,13 +37,13 @@ describe MyCommand::CatApi do
         double(parsed_response: 'Hello World')
       end
 
-      let(:desktop_image_file) { File.join('/tmp', 'test.txt') }
+      let(:cat_image_file) { File.join('/tmp', 'test.txt') }
 
       it 'save on the desktop an image of a cat, as an image file' do
-        allow(subject).to receive(:desktop_image_file).and_return(desktop_image_file)
+        allow(subject).to receive(:cat_image_file).and_return(cat_image_file)
         allow(HTTParty).to receive(:get).with('http://thecatapi.com/api/images/get?type=jpg').and_return(response)
         subject.run
-        expect(File.read(desktop_image_file)).to eq('Hello World')
+        expect(File.read(cat_image_file)).to eq('Hello World')
       end
     end
 
@@ -62,6 +62,27 @@ describe MyCommand::CatApi do
 
         expect(STDOUT).to receive(:puts).with('Cats are cute.')
         subject.run
+      end
+    end
+
+    context 'save_facts command' do
+      let(:command) { 'save_facts' }
+      let(:response) do
+        double(parsed_response: raw_response)
+      end
+
+      let(:raw_response) do
+        "{\"facts\": [\"Cats are cute.\", \"Cats are awesome.\"], \"success\": \"true\"}"
+      end
+
+      let(:cat_facts_file) { File.join('/tmp', 'test_facts.txt') }
+
+      it 'saves 100 facts into txt file on Desktop' do
+        allow(subject).to receive(:cat_facts_file).and_return(cat_facts_file)
+        allow(HTTParty).to receive(:get).with('http://catfacts-api.appspot.com/api/facts?number=100').and_return(response)
+
+        subject.run
+        expect(File.read(cat_facts_file)).to eq("1. Cats are cute.\n2. Cats are awesome.")
       end
     end
   end
