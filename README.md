@@ -1,28 +1,36 @@
 # MyCommand
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/my_command`. To experiment with that code, run `bin/console` for an interactive prompt.
+My Command is a Ruby command line utility gem and has the following interface:
+```ruby
+$ my_command [browser|file|fact|save_facts]
+```
+##### 1. browser command
+With 'browser' argument, my_command will open a new default browser window displaying an image of a cat.
+It uses this api http://thecatapi.com/docs.html#get with image options only with xml format
 
-TODO: Delete this and the text above, and describe your gem
+##### 2. file command
+With 'file' argument, my_command will save on the desktop an image of a cat, as an image file (with 'cat_image.jpg'). It uses this api http://thecatapi.com/docs.html#get with image options only with src format to save the file.
+
+##### 3. fact command
+With 'fact' argument, my_command will print to stdout a random cat fact. It uses this api http://catfacts-api.appspot.com/api/facts
+
+##### 4. save_facts command
+With 'save_facts' argument, my_command will saves 100 cat facts into txt file on Desktop (with 'cat_facts.txt'). It uses this api http://catfacts-api.appspot.com/api/facts?number=100
 
 ## Installation
 
-Add this line to your application's Gemfile:
+To run this locally:
 
 ```ruby
-gem 'my_command'
+rake install
 ```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install my_command
 
 ## Usage
 
-TODO: Write usage instructions here
+After running the 'rake install', you should be able to execute the my_command command with above arguments
+
+## Limitation
+With file and save_facts arguments, it only works for Mac OSX environments to save the files in Desktop directory.
 
 ## Development
 
@@ -32,7 +40,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/my_command.
+Bug reports and pull requests are welcome on GitHub at https://github.com/kophyo/my_command.
 
 
 ## License
